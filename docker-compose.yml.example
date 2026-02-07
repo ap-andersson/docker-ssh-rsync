@@ -1,6 +1,6 @@
 services:
   ssh-rsync:
-    image: ghcr.io/ap-andersson/ssh-rsync:main
+    image: ghcr.io/ap-andersson/docker-ssh-rsync:main
     container_name: ssh-rsync
     ports:
       - ${SSH_PORT:-2222}:22
