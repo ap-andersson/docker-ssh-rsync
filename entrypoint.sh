@@ -46,12 +46,35 @@ mkdir -p "/home/$USERNAME"
 chown "$USERNAME:$USERNAME" "/home/$USERNAME"
 chmod 750 "/home/$USERNAME"
 
-# Set a random password for the user to unlock the account
-echo "$USERNAME:$(date +%s | sha256sum | base64 | head -c 32)" | chpasswd
+# --- PASSWORD SETUP ---
+PASSWORD_ACCESS=${PASSWORD_ACCESS:-false}
+USER_PASSWORD=${USER_PASSWORD:-}
+
+if [ -n "$USER_PASSWORD" ]; then
+    echo "Setting provided password for $USERNAME..."
+    echo "$USERNAME:$USER_PASSWORD" | chpasswd
+else
+    # Generate a random password if none provided (always needed to unlock account)
+    RANDOM_PASS=$(date +%s | sha256sum | base64 | head -c 32)
+    echo "$USERNAME:$RANDOM_PASS" | chpasswd
+    if [ "$PASSWORD_ACCESS" = "true" ]; then
+        echo "----------------------------------------------------------------"
+        echo "PASSWORD ACCESS ENABLED"
+        echo "Generated password for user '$USERNAME': $RANDOM_PASS"
+        echo "----------------------------------------------------------------"
+    fi
+fi
 
 # --- SSH CONFIGURATION ---
 echo "Configuring SSH access for user $USERNAME..."
 echo "" >> /etc/ssh/sshd_config
+
+# Enable PasswordAuthentication if requested
+if [ "$PASSWORD_ACCESS" = "true" ]; then
+    sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+    echo "PasswordAuthentication enabled."
+fi
+
 # Remove existing AllowUsers directive and add the current user
 sed -i '/^AllowUsers/d' /etc/ssh/sshd_config
 echo "AllowUsers $USERNAME" >> /etc/ssh/sshd_config

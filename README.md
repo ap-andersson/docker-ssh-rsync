@@ -19,6 +19,8 @@ The container is configured using the following environment variables:
 | `USERNAME` | `admin` | The username for the SSH user inside the container. |
 | `PUID` | `1000` | The User ID (UID) to run the user as. **Cannot be 0 (root).** |
 | `PGID` | `1000` | The Group ID (GID) to run the user as. **Cannot be 0 (root).** |
+| `PASSWORD_ACCESS` | `false` | Set to `true` to enable password login (default is key-only). |
+| `USER_PASSWORD` | *None* | Optional. Set a specific password. If `PASSWORD_ACCESS=true` and this is empty, a random one is generated. |
 
 ## Volumes
 
