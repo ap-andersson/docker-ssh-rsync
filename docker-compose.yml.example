@@ -1,0 +1,15 @@
+services:
+  ssh-rsync:
+    image: ghcr.io/ap-andersson/ssh-rsync:main
+    container_name: ssh-rsync
+    ports:
+      - ${SSH_PORT:-2222}:22
+    environment:
+      - USERNAME=${SSH_USER:-admin}
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+    volumes:
+      # One data folder by default here, add more if needed
+      - /path/to/data:/home/${SSH_USER:-admin}/data:ro
+      - ./config:/config
+    restart: unless-stopped

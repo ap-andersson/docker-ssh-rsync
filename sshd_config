@@ -1,0 +1,26 @@
+Port 22
+HostKey /config/ssh_host_keys/ssh_host_rsa_key
+HostKey /config/ssh_host_keys/ssh_host_ed25519_key
+
+PermitRootLogin no
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+
+LogLevel VERBOSE
+PrintMotd no
+Subsystem sftp internal-sftp
+MaxStartups 10:30:100
+PerSourceMaxStartups none
+
+# Security Hardening: Disable tunneling and forwarding
+AllowTcpForwarding no
+X11Forwarding no
+AllowAgentForwarding no
+
+# Uncomment to restrict users to their home directory (Disables Rsync/Shell!)
+# Match User *
+#     ChrootDirectory %h
+#     ForceCommand internal-sftp
+#     AllowTcpForwarding no
