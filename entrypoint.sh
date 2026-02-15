@@ -69,6 +69,13 @@ fi
 echo "Configuring SSH access for user $USERNAME..."
 echo "" >> /etc/ssh/sshd_config
 
+# Configure SSH port (allows dynamic port configuration with host networking)
+SSH_PORT=${SSH_PORT:-22}
+if [ "$SSH_PORT" != "22" ]; then
+    echo "Configuring SSH to listen on port $SSH_PORT..."
+    sed -i "s/^Port .*/Port $SSH_PORT/" /etc/ssh/sshd_config
+fi
+
 # Enable PasswordAuthentication if requested
 if [ "$PASSWORD_ACCESS" = "true" ]; then
     sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config

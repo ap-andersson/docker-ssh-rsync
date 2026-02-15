@@ -8,11 +8,40 @@ PasswordAuthentication no
 PermitEmptyPasswords no
 ChallengeResponseAuthentication no
 
-LogLevel VERBOSE
+# Performance Optimization
+LogLevel INFO
 PrintMotd no
 Subsystem sftp internal-sftp
-MaxStartups 10:30:100
+MaxStartups 100:30:200
 PerSourceMaxStartups none
+
+# Security: Rate limiting for failed authentication attempts
+MaxAuthTries 3
+LoginGraceTime 30
+
+# Prevent potential timing attacks
+UseDNS no
+
+# TCP Performance Tuning
+TCPKeepAlive yes
+ClientAliveInterval 30
+ClientAliveCountMax 10
+
+# Prioritize fast ciphers (AES-GCM uses hardware acceleration on modern CPUs)
+Ciphers aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr
+
+# Use faster MACs
+MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
+
+# Disable compression - media files are already compressed, so this just wastes CPU
+# Enable only if serving primarily text/uncompressed data
+Compression no
+
+# Prevent rekeying during large transfers (default 1GB causes pauses)
+RekeyLimit 0 0
+
+# Prevent ISP/router throttling based on DSCP markings
+IPQoS cs0 cs0
 
 # Security Hardening: Disable tunneling and forwarding
 AllowTcpForwarding no
