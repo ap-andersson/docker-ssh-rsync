@@ -43,3 +43,4 @@ On the first run, if no client key exists, a new Ed25519 key pair is generated i
 
 - **Permission Denied**: If you see permission warnings in the logs, ensure the mounted host directories are owned by the PUID/PGID specified in your `.env` file.
 - **Read-Only**: The default example mounts volumes as read-only (`:ro`). Remove `:ro` in `docker-compose.yml` if you need to upload files to the server.
+
